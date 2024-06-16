@@ -11,7 +11,7 @@ export const endpoints = {
     'register':'/api/users/',
     'current_user':'/api/current-user/',
     'landlordPostCreate':'/api/landlordpost_create/',
-    'tenantPost':'/api/tenantpost/'
+    'tenantPost':'/api/tenantpost_create/'
 }
 
 export const authApi=()=>{

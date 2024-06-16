@@ -2,12 +2,15 @@ import React from 'react';
 import Rooms from '../component/rooms';
 import Login from '../component/login';
 import Home from '../component/home';
-import Register from '../component/register';
 import SavedRoom from '../component/savedRoom/savedRoom';
 import Host from '../component/host/host';
 import ForgotPassword from '../component/host/components/password/forgotPassword';
 import NewPostRoom from '../component/Landlord/post';
 import HomeLandlord from '../component/Landlord/home';
+import PostFindRoom from '../component/host/components/post/postFindRoom';
+import RegisterLandlord from '../component/Authentication/RegisterLandlord';
+import SelectRole from '../component/Authentication/SelectRole';
+import RegisterTenant from '../component/Authentication/RegisterTenant';
 
 const routes = [
     {
@@ -36,9 +39,9 @@ const routes = [
         main: ({location}) => <Login location={location}/>
     },
     {
-        path: '/register',
+        path: '/registerlandlord',
         exact: false,
-        main: ({location}) => <Register location={location}/>
+        main: ({location}) => <RegisterLandlord location={location}/>
     },
     {
         path: '/postStatus',
@@ -63,10 +66,23 @@ const routes = [
     {
         path: '/home',
         exact: true,
-        main: ({location}) => <HomeLandlord
-        
-        location={location}/>
+        main: ({location}) => <HomeLandlord location={location}/>
     },
+    {
+        path: '/postfindroom',
+        exact: true,
+        main: ({location}) => <PostFindRoom location={location}/>
+    },
+    {
+        path: '/selectrole',
+        exact: true,
+        main: ({location}) => <SelectRole location={location}/>
+    },
+    {
+        path: '/registertenant',
+        exact: false,
+        main: ({location}) => <RegisterTenant location={location}/>
+    }
 ];
 
 export default routes;

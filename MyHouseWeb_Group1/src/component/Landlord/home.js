@@ -7,7 +7,6 @@ const HomeLandlord=()=> {
     const [rooms, setRooms] = useState(null);
 
     const tenantPost = async () => {
-        console.info('================')
         try {
             let res = await APIs.get(endpoints['tenantPost']);
             setRooms(res.data)

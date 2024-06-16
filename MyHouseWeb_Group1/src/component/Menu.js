@@ -16,7 +16,7 @@ const Menu = () => {
         },
         {
             name: 'Đăng ký',
-            to: '/register',
+            to: '/selectrole',
             exact: false
         }
     ];
@@ -33,7 +33,7 @@ const Menu = () => {
                 exact={activeOnlyWhenExact}
                 children={({ match }) => {
                     const active = match ? 'active bg-pink' : '';
-                    const loginStatus = (userLogin && (to === '/login' || to === '/register')) ? 'hidden' : '';
+                    const loginStatus = (userLogin && (to === '/login' || to === '/selectrole')) ? 'hidden' : '';
 
                     return (
                         <Nav.Item as="li" className={`my-li align-items-center d-grid ${active} ${loginStatus}`}>
@@ -57,7 +57,7 @@ const Menu = () => {
                 });
                 menus.push({
                     name: 'Đăng tìm trọ',
-                    to: '/postStatus',
+                    to: '/postfindroom',
                     exact: false
                 });
                 menus.push({
