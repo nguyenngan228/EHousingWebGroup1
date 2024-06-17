@@ -9,6 +9,7 @@ export const endpoints = {
     'landlordPost':'/api/landlordposts/',
     'login':'/api/login/',
     'register':'/api/users/',
+    'landlord_register':'/api/landlord_create/',
     'current_user':'/api/current-user/',
     'landlordPostCreate':'/api/landlordpost_create/',
     'tenantPost':'/api/tenantpost_create/'
