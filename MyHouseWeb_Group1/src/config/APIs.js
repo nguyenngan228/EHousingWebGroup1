@@ -12,7 +12,17 @@ export const endpoints = {
     'landlord_register':'/api/landlord_create/',
     'current_user':'/api/current-user/',
     'landlordPostCreate':'/api/landlordpost_create/',
-    'tenantPost':'/api/tenantpost_create/'
+    'tenantPost':'/api/tenantpost/',
+    'tenantPostDetail':(detailId)=>`/api/tenantpost/${detailId}/`,
+    'landlordPostDetail':(postId)=>`/api/landlordposts/${postId}/`,
+    'roomDetail':(roomId)=>`/api/rooms/${roomId}/images/`,
+    'loadUser':(userId)=>`/api/users/${userId}/`,
+    'follow':(flId)=>`/api/users/${flId}/follow/`,
+    'landlordPostByUserId':(landlordId)=>`/api/landlordposts/${landlordId}/landlord/`,
+    'tenantPostByUserId':(tenantId)=>`/api/tenantposts/${tenantId}/tenant/`,
+    'checkFollow':(id)=>`/api/checkfollow/${id}/`,
+    'comment':(cmtPostId)=>`/api/posts/${cmtPostId}/comments/`,
+    'listCmt':(cmtId)=>`/api/posts/${cmtId}/getcomments/`
 }
 
 export const authApi=()=>{

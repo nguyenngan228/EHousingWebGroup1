@@ -7,6 +7,8 @@ import routes from './routes/routes';
 import { MyDispatchContext, MyUserContext } from './config/Contexts';
 import MyUserReducer from './config/Reducer';
 import cookie from 'react-cookies';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App = () => {
     const [user, dispatch] = useReducer(MyUserReducer, cookie.load("user") || null);

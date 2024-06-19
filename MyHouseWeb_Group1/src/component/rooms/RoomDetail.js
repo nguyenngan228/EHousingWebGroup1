@@ -1,88 +1,178 @@
 import React, { useState, useEffect } from 'react';
-import {Button} from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import ImageSlider from "./ImageSlider";
-import { API_URL } from '../../config/APIs';
-
-const RoomDetail = (props) => {
-    const {match} = props;
-    const id = match.params.id;
-
-    const [room, setRoom] = useState({});
-
-    useEffect(() => {
-        if (id >= 0) {
-            const url = `${API_URL}room/searchByRoomId/${id}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (typeof data.length !== 'undefined') {
-                        if(typeof data[0].post[0] !== 'undefined') {
-                            data[0].post = data[0].post[0];
-                        }
-                        setRoom(data[0]);
-                        console.log(data[0].image);
-                    }
-                });
+import { authApi, endpoints } from '../../config/APIs';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+const RoomDetail = () => {
+    const [room, setRoom] = useState(null);
+    const [img, setImg] = useState(null);
+    const { id } = useParams();
+    const [cmt, setCmt] = useState(null);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [listComment, setListComment] = useState(null)
+    
+    const loadPostDetail = async () => {
+        try {
+            let res = await authApi().get(endpoints['landlordPostDetail'](id));
+            setRoom(res.data)
+            let resp = await authApi().get(endpoints['roomDetail'](res.data.room.id))
+            setImg(resp.data)
+        } catch (ex) {
+            console.info(ex)
         }
-    }, []);
+
+
+    }
+    useEffect(() => {
+        loadPostDetail();
+    }, [id]);
+
+    const addComment = async () => {
+        try {
+            let res = await authApi().post(endpoints['comment'](id), {
+                "content": cmt
+            })
+            setCmt("");
+            setListComment([res.data, ...listComment]);
+            setIsFollowing(true)
+
+
+        } catch (ex) {
+            console.error(ex)
+        } finally {
+            setIsFollowing(false)
+        }
+    }
+    const loadCmt = async () => {
+        try {
+            let res = await authApi().get(endpoints['listCmt'](id))
+            setListComment(res.data)
+        } catch (ex) {
+            console.error(ex)
+        }
+    }
+    useEffect(() => {
+        loadCmt();
+    }, [id])
+
+
 
     return (
         <div className="mb-4">
-            {
-                Object.keys(room).length !== 0 ?
-                    <div className="room-box">
-                        <div className="room-slide-img">
-                            <ImageSlider images={room.image} />
+            {room === null ? (
+                <Spinner animation="border" />
+            ) : (
+                <>
+                    {Object.keys(room).length !== 0 &&
+                        <div className="room-box">
+                            <div className="room-slide-img">
+                                <ImageSlider images={img} />
+                            </div>
+                            <br />
+                            <br />
+                            <div className="room-details-container">
+                                <div className="room-details">
+                                    <div style={containerStyle}>
+                                        <div style={leftColumnStyle}>
+                                            <h1>{room.post.title}</h1>
+                                            <p>
+                                                <span className="bold">Nội dung </span>
+                                                {room.post.content}
+                                            </p>
+                                            <p>
+                                                <span className="bold">Ngày đăng </span>
+                                                {room.post.createdAt}
+                                            </p>
+                                            <p>
+                                                <span className="bold">Tên phòng </span> {room.room.name}
+                                            </p>
+                                            <p>
+                                                <span className="bold">Giá cả </span> {room.room.price} (VND)
+                                            </p>
+                                            <p>
+                                                <span className="bold">Địa chỉ </span> {room.room.address}
+                                            </p>
+                                            <p>
+                                                <span className="bold">Số người ở </span> {room.room.maxOccupants}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <Form.Group className="mb-3 d-flex align-items-center" controlId="formBasicCheckbox">
+                                            <Form.Control
+                                                onChange={e => setCmt(e.target.value)}
+                                                value={cmt}
+                                                type="text"
+                                                placeholder="Nhập bình luận"
+                                            />
+                                            <Button onClick={addComment} className="ms-2 mt-3 btn btn-default text-white">
+                                                Bình luận
+                                            </Button>
+                                        </Form.Group>
+                                    </div>
+
+                                    <div style={styles.commentsSection}>
+                                        {listComment.length === 0 ? (
+                                            <p>Chưa có bình luận nào</p>
+                                        ) : (
+                                            listComment.map(c => (
+                                                <div key={c.id} style={styles.comment}>
+                                                    <p>{c.user.fullName}</p>
+                                                    <img className="rounded-circle profile-img" src={c.user.avatar} alt="Profile" style={styles.avatar} />
+                                                    <div style={styles.commentContent}>
+                                                        <p>{c.content}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+
+                                </div>
+                            </div>
                         </div>
-                        <br/>
-                        <br/>
-                        <h1>
-                            {typeof room.post.title !== 'undefined' ? room.post.title  : ""}
-                        </h1>
-                        <p>
-                            <span className="bold">Địa chỉ: </span>{room.address},
-                            &nbsp;{room.ward},
-                            &nbsp;{room.district},
-                            &nbsp;{room.city}
-                        </p>
-                        <p>
-                            <span className="bold">Chi tiết: </span>
-                            {
-                                typeof room.addition_infor !== 'undefined' ? room.addition_infor: ""
-                            }
-                        </p>
-                        <p>
-                            <span className="bold">Dịch vụ: </span>
-                            {
-                                typeof room.post.service !== 'undefined' && Object.keys(room.post.service).length ?
-                                    Object.entries(room.post.service).map(function(key, index) {
-                                        if(index > 0) {
-                                            return (
-                                                <span key={index}>{key[1]} </span>
-                                            )
-                                        }
-                                    })
-
-                                    : ""
-                            }
-                        </p>
-                        <p>
-                            <span className="bold">Diện tích: </span> {room.area} (m2)
-                        </p>
-                        <p>
-                            <span className="bold">Giá cả: </span> {room.price} (VND)
-                        </p>
-                        <p>
-                            <span
-                                className="bold">Liên Hệ: </span> {room.host.name} - {room.host.phone} - {room.host.email}
-                        </p>
-                    </div>
-                    : ''
-            }
-
+                    }
+                </>
+            )}
         </div>
-
     );
 };
 
+
 export default RoomDetail;
+
+const containerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+};
+
+const leftColumnStyle = {
+    flex: 3,
+    marginRight: '20px',
+};
+
+const rightColumnStyle = {
+    flex: 1,
+
+
+
+};
+const styles = {
+    comment: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '15px',
+    },
+    avatar: {
+        width: '50px',
+        height: '50px',
+        marginRight: '10px',
+    },
+    commentContent: {
+        margin: '20px',
+        backgroundColor: '#f1f1f1',
+        padding: '10px',
+        borderRadius: '10px',
+        flex: 1
+    }
+};

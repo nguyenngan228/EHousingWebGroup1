@@ -1,0 +1,17 @@
+.room-details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 20px; /* điều chỉnh khoảng cách từ top */
+}
+
+.room-details {
+    max-width: 600px; /* giới hạn chiều rộng nội dung */
+    margin-top: 20px; /* điều chỉnh khoảng cách giữa các phần tử */
+}
+
+.bold {
+    font-weight: bold;
+}

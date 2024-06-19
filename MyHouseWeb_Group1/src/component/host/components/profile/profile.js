@@ -201,45 +201,8 @@ function Profile() {
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <Button className="mt-3 btn btn-default text-white btn-lg" onClick={onShowProfile}>Thay
-                            Đổi</Button>
-                    </div>
-                </div>
-                <div className="transactions">
-                    <h3 className="bold">Lịch Sử Đã Thanh Toán</h3>
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Mã Thanh Toán</th>
-                                <th>Loại Gói Đăng Ký</th>
-                                <th>Ngày Thanh Toán</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </Table>
                 </div>
 
-                <div className="transactionsProgram">
-                    <h3 className="bold">Lịch Sử Chưa Thanh Toán</h3>
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Mã Thanh Toán</th>
-                                <th>Loại Gói Đăng Ký</th>
-                                <th>Ngày tạo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-
-                        </tbody>
-                    </Table>
-                </div>
             </div>
 
             <Modal

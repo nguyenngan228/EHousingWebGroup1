@@ -11,6 +11,9 @@ import PostFindRoom from '../component/host/components/post/postFindRoom';
 import RegisterLandlord from '../component/Authentication/RegisterLandlord';
 import SelectRole from '../component/Authentication/SelectRole';
 import RegisterTenant from '../component/Authentication/RegisterTenant';
+import RoomDetail from '../component/rooms/RoomDetail';
+import ProfileLandlord from '../component/Landlord/ProfileLandlord';
+import TenantDetailPost from '../component/host/components/post/DetailPost';
 
 const routes = [
     {
@@ -82,7 +85,22 @@ const routes = [
         path: '/registertenant',
         exact: false,
         main: ({location}) => <RegisterTenant location={location}/>
-    }
+    },
+    {
+        path: '/landlordposts/:id/',  
+        exact: false,
+        main: ({ match, location }) => <RoomDetail match={match} location={location} />
+    },
+    {
+        path: '/users/:userId/',  
+        exact: false,
+        main: ({ match, location }) => <ProfileLandlord match={match} location={location} />
+    },
+    {
+        path: '/tenantpost/:detailId/',  
+        exact: false,
+        main: ({ match, location }) => <TenantDetailPost match={match} location={location} />
+    },
 ];
 
 export default routes;

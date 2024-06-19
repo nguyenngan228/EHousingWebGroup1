@@ -10,7 +10,7 @@ const HomeLandlord=()=> {
         try {
             let res = await APIs.get(endpoints['tenantPost']);
             setRooms(res.data)
-            console.info(res)
+            console.info(res.data)
         } catch (ex) {
             console.error(ex);
         }
@@ -131,7 +131,7 @@ const HomeLandlord=()=> {
                                             {c.post.content && c.post.content} <br />
                                             {c.address && c.address}
                                         </Card.Text>
-                                        <a href={`/room/${c.id}`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
+                                        <a href={`/tenantpost/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
                                     </Card.Body>
                                 </Card>
                             </div>

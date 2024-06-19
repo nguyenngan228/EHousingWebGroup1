@@ -5,13 +5,6 @@ import APIs, { endpoints } from '../config/APIs';
 
 const Home=()=> {
     const [rooms, setRooms] = useState(null);
-    const [cities, setCities] = useState([]);
-    const [districts, setDistricts] = useState([]);
-    const [wards, setWards] = useState([]);
-    const [selectedCity, setSelectedCity] = useState({ id: 0, value: null });
-    const [selectedDistrict, setSelectedDistrict] = useState({ id: 0, value: null });
-    const [selectedWard, setSelectedWard] = useState({ id: 0, value: null });
-    const GHN_TOKEN = 'b08e0769-130e-11ec-b8c6-fade198b4859';
 
     const loadLandlordPost = async () => {
         try {
@@ -74,48 +67,27 @@ const Home=()=> {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="row">
-                                    {/* <div className="col-lg-6 col-12 p-0">
-                                        <input type="text" className="form-control search-slt"
-                                               placeholder="Tìm kiếm"/>
-                                    </div> */}
+                                    
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province" >
                                             <option value="">Chọn tỉnh thành</option>
-                                            {/* 
-                                            cities.map((item, index) => (
-                                                <option key={index} value={`${item.ProvinceID},${item.ProvinceName}`}>
-                                                    {item.ProvinceName}
-                                                </option>
-                                            )) 
-                                            */}
+                                    
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province">
                                             <option value="">Chọn quận huyện</option>
-                                            {/* 
-                                            districts.map((item, index) => (
-                                                <option key={index} value={`${item.DistrictID},${item.DistrictName}`}>
-                                                    {item.DistrictName}
-                                                </option>
-                                            )) 
-                                            */}
+                            
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province">
                                             <option value="">Chọn quận huyện</option>
-                                            {/* 
-                                            wards.map((item, index) => (
-                                                <option key={index} value={`${item.WardCode},${item.WardName}`}>
-                                                    {item.WardName}
-                                                </option>
-                                            )) 
-                                            */}
+                    
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <button onClick={() => {}} type="button" className="btn bg-gradient btn-danger wrn-btn">Search</button>
+                                        <button type="button" className="btn bg-gradient btn-danger wrn-btn">Search</button>
                                     </div>
                                 </div>
                             </div>
@@ -137,19 +109,9 @@ const Home=()=> {
                                         <Card.Text>
                                             {c.post.content && c.post.content} <br />
                                             Giá: <span className="fw-bold"><NumberFormat value={c.room.price} displayType={'text'} thousandSeparator={true} /> (VND)</span> <br />
-                                            {/* {c.district && c.district.name && (
-                                                <>
-                                                    {c.district.prefix}: {c.district.name} <br />
-                                                </>
-                                            )}
-                                            {c.ward && c.ward.name && (
-                                                <>
-                                                    {c.ward.prefix}: {c.ward.name} <br />
-                                                </>
-                                            )} */}
                                             {c.room.address && c.room.address}
                                         </Card.Text>
-                                        <a href={`/room/${c.id}`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
+                                        <a href={`/landlordposts/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
                                     </Card.Body>
                                 </Card>
                             </div>

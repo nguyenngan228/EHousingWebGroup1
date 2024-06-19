@@ -1,12 +1,11 @@
-import React from "react";
-import Slider from "react-slick";
-import {Image} from 'react-bootstrap';
+import React from 'react';
+import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { CLOUD_IMG } from "../../config/APIs";
+import Spinner from "react-bootstrap/Spinner";
+import Image from "react-bootstrap/Image";
 
-export default function ImageSlick(props) {
-    const {images} = props;
+const ImageSlick = ({ images }) => {
     const settings = {
         dots: true,
         infinite: true,
@@ -14,17 +13,20 @@ export default function ImageSlick(props) {
         slidesToShow: 1,
         slidesToScroll: 1
     };
+
     return (
         <Slider {...settings}>
-            {
-                images.map((item, index) => {
-                    return (
-                        <div key={index} className="room-box-img">
-                            <Image src={`${CLOUD_IMG}/${item.name}`} fluid/>
-                        </div>
-                    )
-                })
-            }
+            {images === null || images === undefined ? (
+                <Spinner animation="border" />
+            ) : (
+                images.map((item) => (
+                    <div key={item.id} className="room-box-img">
+                        <Image src={item.image} fluid />
+                    </div>
+                ))
+            )}
         </Slider>
     );
-}
+};
+
+export default ImageSlick;
