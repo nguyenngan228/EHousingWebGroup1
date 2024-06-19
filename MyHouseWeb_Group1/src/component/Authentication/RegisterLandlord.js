@@ -18,7 +18,7 @@ const RegisterLandlord = () => {
     const [selectedCity, setSelectedCity] = useState({ id: 0, value: null });
     const [selectedDistrict, setSelectedDistrict] = useState({ id: 0, value: null });
     const [selectedWard, setSelectedWard] = useState({ id: 0, value: null });
-    // const GHN_TOKEN = 'b08e0769-130e-11ec-b8c6-fade198b4859';
+    const [isLoading, setIsLoading] = useState(false)
 
     const avatar = useRef();
     const imageRow = useRef();
@@ -31,7 +31,7 @@ const RegisterLandlord = () => {
         { label: "Email", type: "email", field: "email" },
         { label: "Họ tên", type: "text", field: "full_name" },
         { label: "Số điện thoại", type: "text", field: "phone_number" },
-        { label: "Địa chỉ", type: "text", field: "street" }
+        { label: "Địa chỉ cụ thể", type: "text", field: "address" }
     ];
 
     const change = (e, field) => {
@@ -42,17 +42,25 @@ const RegisterLandlord = () => {
 
     const register = async (e) => {
         e.preventDefault();
+        setIsLoading(true)
         let form = new FormData();
         for (let key in user) {
-            if (key !== 'confirm') {
-                if (key === 'street')
+            if (user[key] === "") {
+                setErrorMessage("Vui lòng nhập đầy đủ thông tin");
+                setAlertStatus(true);
+                setAlertType("error");
+                return;
+            }
+            else if (key !== 'confirm') {
+                if (key === 'address')
                     form.append(key, `${user[key]},${selectedWard.value}, ${selectedDistrict.value},Thành phố ${selectedCity.value}`)
                 form.append(key, user[key]);
             }
         }
-        if (avatar.current.files[0]) {
+        if (avatar) {
             form.append('file', avatar.current.files[0]);
         }
+        console.log(avatar)
         if (imageRow.current.files.length > 0) {
             Array.from(imageRow.current.files).forEach(file => {
                 form.append('imageRow', file);
@@ -69,21 +77,29 @@ const RegisterLandlord = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            console.log(res.data)
             if (res.status === 201) {
                 setErrorMessage("Đăng kí thành công!");
                 setAlertStatus(true);
                 setAlertType("success");
+                setIsLoading(false)
                 history.push("/login");
+                
             } else {
                 setErrorMessage("Đã có lỗi xảy ra");
                 setAlertStatus(true);
                 setAlertType("error");
+                setIsLoading(false)
+                return;
             }
         } catch (ex) {
             console.error(ex);
             setErrorMessage("Đã có lỗi xảy ra");
             setAlertStatus(true);
             setAlertType("error");
+            setIsLoading(false)
+        }finally{
+            setIsLoading(false)
         }
     }
     useEffect(() => {
@@ -154,10 +170,6 @@ const RegisterLandlord = () => {
                     </Form.Group>
                 ))}
 
-                <Form.Group className="mb-3" controlId="avatar">
-                    <Form.Label className="float-left">Chọn ảnh đại diện</Form.Label>
-                    <Form.Control type="file" accept=".png,.jpg,.jpeg" ref={avatar} />
-                </Form.Group>
                 <div className="mt-3">
                     <select className="form-control search-slt" id="province" onChange={(e) => handleSelectCity(e.target.value)}>
                         <option value="">Chọn tỉnh thành</option>
@@ -186,7 +198,7 @@ const RegisterLandlord = () => {
                 </div>
                 <div className="mt-3">
                     <select className="form-control search-slt" id="province" onChange={(e) => handleSelectWard(e.target.value)}>
-                        <option value="">Chọn quận huyện</option>
+                        <option value="">Chọn phường xã</option>
                         {wards === null ? (
                             <Spinner animation="border" />
                         ) : (wards.map(c => (
@@ -197,6 +209,10 @@ const RegisterLandlord = () => {
 
                     </select>
                 </div>
+                <Form.Group className="mb-3" controlId="avatar">
+                    <Form.Label className="float-left">Chọn ảnh đại diện</Form.Label>
+                    <Form.Control type="file" accept=".png,.jpg,.jpeg" ref={avatar} />
+                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="imageRow">
                     <Form.Label className="float-left">Chọn ảnh dãy trọ</Form.Label>
@@ -207,8 +223,8 @@ const RegisterLandlord = () => {
                     <Form.Control type="file" accept=".png,.jpg,.jpeg" ref={imageRoom} multiple />
                 </Form.Group>
 
-                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary">
-                    Đăng kí
+                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
+                    {isLoading?<Spinner animation="border" />:"Đăng kí"}
                 </Button>
             </Form>
 

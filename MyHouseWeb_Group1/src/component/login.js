@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Route, useHistory } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner } from 'react-bootstrap';
 import Alert from "./common/alert"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import APIs, { authApi, endpoints } from '../config/APIs';
@@ -8,10 +8,11 @@ import cookie from 'react-cookies'
 import { MyDispatchContext } from '../config/Contexts';
 const Login = () => {
     const history = useHistory();
-
     const [errorMessage, setErrorMessage] = useState('');
     const [alertStatus, setAlertStatus] = useState(false);
     const [alertType, setAlertType] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
+
 
 
     // const {code} = params;
@@ -142,13 +143,19 @@ const Login = () => {
             else if (u.data.role === 'ROLE_LANDLORD')
                 history.push('/home');
         } catch (ex) {
-            console.error(ex)
+            setErrorMessage("Tài khoản chưa kích hoạt hoặc không tồn tại");
+            setAlertStatus(true);
+            setAlertType("error");
+            setIsLoading(false)
+            return;
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
         <div className="Login">
-            <Form className="mt-5">
+            <Form onSubmit={login} className="mt-5">
                 <div className="form-title">
                     <h2>Đăng Nhập</h2>
                 </div>
@@ -167,8 +174,11 @@ const Login = () => {
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Check className="float-left" type="checkbox" label="Nhớ mật khẩu" />
                 </Form.Group>
-                <Button className="mt-3 btn btn-default text-white" onClick={login} variant="primary">
+                {/* <Button className="mt-3 btn btn-default text-white" onClick={login} variant="primary">
                     Đăng nhập
+                </Button> */}
+                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
+                    {isLoading ? <Spinner animation="border" /> : "Đăng nhập"}
                 </Button>
             </Form>
 
