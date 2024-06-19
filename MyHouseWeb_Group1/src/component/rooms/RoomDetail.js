@@ -10,7 +10,7 @@ const RoomDetail = () => {
     const [cmt, setCmt] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
     const [listComment, setListComment] = useState(null)
-    
+
     const loadPostDetail = async () => {
         try {
             let res = await authApi().get(endpoints['landlordPostDetail'](id));
@@ -36,7 +36,6 @@ const RoomDetail = () => {
             setListComment([res.data, ...listComment]);
             setIsFollowing(true)
 
-
         } catch (ex) {
             console.error(ex)
         } finally {
@@ -47,6 +46,8 @@ const RoomDetail = () => {
         try {
             let res = await authApi().get(endpoints['listCmt'](id))
             setListComment(res.data)
+            console.log('============')
+            console.log(res.data)
         } catch (ex) {
             console.error(ex)
         }
@@ -96,6 +97,16 @@ const RoomDetail = () => {
                                                 <span className="bold">Số người ở </span> {room.room.maxOccupants}
                                             </p>
                                         </div>
+                                        <div style={{ ...rightColumnStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            <img className="rounded-circle profile-img" src={room.post.user.avatar} alt="User avatar" />
+                                            <p>
+                                                <span className="bold"></span> {room.post.user.fullName}
+                                            </p>
+                                            <p>
+                                                <span className="bold"></span> {room.post.user.landlord.phoneNumber}
+                                            </p>
+                                            <a href={`/users/${room.post.user.id}/`} className="cs-btn-detail btn btn-default text-white">Xem trang</a>
+                                        </div>
                                     </div>
                                     <div className="row">
                                         <Form.Group className="mb-3 d-flex align-items-center" controlId="formBasicCheckbox">
@@ -112,13 +123,13 @@ const RoomDetail = () => {
                                     </div>
 
                                     <div style={styles.commentsSection}>
-                                        {listComment.length === 0 ? (
+                                        {listComment === null ? (
                                             <p>Chưa có bình luận nào</p>
                                         ) : (
                                             listComment.map(c => (
                                                 <div key={c.id} style={styles.comment}>
-                                                    <p>{c.user.fullName}</p>
-                                                    <img className="rounded-circle profile-img" src={c.user.avatar} alt="Profile" style={styles.avatar} />
+                                                    <p>{c.userId.fullName}</p>
+                                                    <img className="rounded-circle profile-img" src={c.userId.avatar} alt="Profile" style={styles.avatar} />
                                                     <div style={styles.commentContent}>
                                                         <p>{c.content}</p>
                                                     </div>

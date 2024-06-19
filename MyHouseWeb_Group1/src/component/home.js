@@ -10,7 +10,7 @@ const Home=()=> {
         try {
             let res = await APIs.get(endpoints['landlordPost']);
             setRooms(res.data)
-            console.info(res)
+            console.info(res.dat)
         } catch (ex) {
             console.error(ex);
         }

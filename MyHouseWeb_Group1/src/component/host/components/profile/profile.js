@@ -179,7 +179,7 @@ function Profile() {
                                 <h6 className="mb-0 float-left">Họ và tên</h6>
                             </div>
                             <div className="col-sm-9 text-secondary">
-                                {user.full_name}
+                                {user.fullName}
                             </div>
                         </div>
 

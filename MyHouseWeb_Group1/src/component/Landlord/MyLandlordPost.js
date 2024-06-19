@@ -8,19 +8,27 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 const MyLandlordPost = () => {
     const user = useContext(MyUserContext)
     const [post, setPost] = useState(null)
-    
+    const [img, setImg] = useState(null)
+
 
 
     const getPost = async () => {
         try {
             let res = await authApi().get(endpoints['landlordPostByUserId'](user.id))
             setPost(res.data)
+            console.log(res.data)
+            
+
+            // let resp = await authApi().get(endpoints['roomDetail'](res.data.room.id))
+            // setImg(resp.data)
+            
 
         } catch (ex) {
             console.error(ex)
         }
 
     }
+    
 
     useEffect(() => {
         getPost()
@@ -36,8 +44,15 @@ const MyLandlordPost = () => {
                 ) : (
                     post.map(c => (
                         <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
-                            <Card style={{ width: '18rem' }}>
-                                <Card.Img variant="top" src='https://res.cloudinary.com/dc5gyjv8c/image/upload/v1713025498/uyqa8u9seyahpnk0k324.png' />
+                            <Card style={{ width: '18rem', height: '35rem' }}>
+                                <Card.Img
+                                    variant="top"
+                                    src={img && img.length > 0 ? img[0].url : 'https://res.cloudinary.com/dc5gyjv8c/image/upload/v1718816929/no-img_hzegvu.png'}
+                                />
+
+                                {/* {img==null?('https://res.cloudinary.com/dc5gyjv8c/image/upload/v1718816929/no-img_hzegvu.png'):(img.map(i=>(<Card.Img key={i.id} variant="top" src={c.images ? c.images[0] />))
+                                } */}
+
                                 <Card.Body>
                                     <Card.Title>{c.post.title && c.post.title}</Card.Title>
                                     <Card.Text>

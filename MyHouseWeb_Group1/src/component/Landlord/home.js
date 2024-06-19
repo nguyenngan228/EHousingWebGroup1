@@ -3,14 +3,13 @@ import { Carousel, Card, Spinner } from 'react-bootstrap';
 import APIs, { endpoints } from '../../config/APIs';
 
 
-const HomeLandlord=()=> {
+const HomeLandlord = () => {
     const [rooms, setRooms] = useState(null);
 
     const tenantPost = async () => {
         try {
             let res = await APIs.get(endpoints['tenantPost']);
             setRooms(res.data)
-            console.info(res.data)
         } catch (ex) {
             console.error(ex);
         }
@@ -67,48 +66,24 @@ const HomeLandlord=()=> {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="row">
-                                    {/* <div className="col-lg-6 col-12 p-0">
-                                        <input type="text" className="form-control search-slt"
-                                               placeholder="Tìm kiếm"/>
-                                    </div> */}
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
                                             <option value="">Chọn tỉnh thành</option>
-                                            {/* 
-                                            cities.map((item, index) => (
-                                                <option key={index} value={`${item.ProvinceID},${item.ProvinceName}`}>
-                                                    {item.ProvinceName}
-                                                </option>
-                                            )) 
-                                            */}
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
                                             <option value="">Chọn quận huyện</option>
-                                            {/* 
-                                            districts.map((item, index) => (
-                                                <option key={index} value={`${item.DistrictID},${item.DistrictName}`}>
-                                                    {item.DistrictName}
-                                                </option>
-                                            )) 
-                                            */}
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => {}}>
+                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
                                             <option value="">Chọn quận huyện</option>
-                                            {/* 
-                                            wards.map((item, index) => (
-                                                <option key={index} value={`${item.WardCode},${item.WardName}`}>
-                                                    {item.WardName}
-                                                </option>
-                                            )) 
-                                            */}
+
                                         </select>
                                     </div>
                                     <div className="col-lg-3 col-12 p-0">
-                                        <button onClick={() => {}} type="button" className="btn bg-gradient btn-danger wrn-btn">Search</button>
+                                        <button type="button" className="btn bg-gradient btn-danger wrn-btn">Search</button>
                                     </div>
                                 </div>
                             </div>
@@ -123,13 +98,15 @@ const HomeLandlord=()=> {
                     ) : (
                         rooms.map(c => (
                             <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
-                                <Card style={{ width: '18rem' }}>
-                                    <Card.Img variant="top" src='https://res.cloudinary.com/dc5gyjv8c/image/upload/v1713025498/uyqa8u9seyahpnk0k324.png' />
+                                <Card style={{ width: '18rem', height: '15rem' }}>
                                     <Card.Body>
                                         <Card.Title>{c.post.title && c.post.title}</Card.Title>
                                         <Card.Text>
                                             {c.post.content && c.post.content} <br />
-                                            {c.address && c.address}
+                                            Số người ở: {c.maxOccupants && c.maxOccupants} <br />
+                                            Giá từ: {c.minPrice && c.minPrice} - {c.maxPrice && c.maxPrice} <br />
+                                            Địa chỉ: {c.address && c.address} 
+
                                         </Card.Text>
                                         <a href={`/tenantpost/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
                                     </Card.Body>

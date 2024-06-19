@@ -94,13 +94,16 @@ const ProfileLandlord = () => {
                                     <div className="room-details-container">
                                         <div className="room-details">
                                             <p>
-                                                <span className="bold">{user.landlord.fullName}</span>
+                                                <span className="bold">{user.fullName}</span>
                                             </p>
                                             <p>
                                                 <span className="bold">{user.landlord.phoneNumber}</span>
                                             </p>
                                             <p>
-                                                <span className="bold">{user.landlord.street}</span>
+                                                <span className="bold">{user.email}</span>
+                                            </p>
+                                            <p>
+                                                <span className="bold">{user.landlord.address}</span>
                                             </p>
                                             <button
                                                 style={{
