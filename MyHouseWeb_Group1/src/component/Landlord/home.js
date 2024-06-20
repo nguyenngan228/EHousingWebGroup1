@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Carousel, Card, Spinner } from 'react-bootstrap';
+import { Carousel, Card, Spinner, Form, Button } from 'react-bootstrap';
 import APIs, { endpoints } from '../../config/APIs';
+import { getCities, getDistricts, getWards } from '../../config/APIAdress';
 
 
 const HomeLandlord = () => {
     const [rooms, setRooms] = useState(null);
+    const [maxOccupants, setMaxOccupants] = useState('')
+    const [minPrice, setminPrice] = useState('')
+    const [maxPrice, setMaxPrice] = useState('')
+    const [result, setResult] = useState(null)
+
 
     const tenantPost = async () => {
         try {
@@ -17,6 +23,22 @@ const HomeLandlord = () => {
     useEffect(() => {
         tenantPost();
     }, [])
+
+    const kw = `/api/tenantpost/?maxOccupants=${maxOccupants}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    console.log(kw)
+
+
+    const search = async () => {
+        try {
+            const res = await APIs.get(endpoints['searchTeantPostByKw'](kw))
+            console.log('===================')
+            console.log(res.data)
+            setResult(res.data)
+        } catch (ex) {
+            console.error(ex)
+        }
+
+    }
 
 
     return (
@@ -62,51 +84,67 @@ const HomeLandlord = () => {
             </Carousel>
             <section className="search-sec">
                 <div className="container">
-                    <form action="#" method="post" noValidate="novalidate">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="row">
-                                    <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
-                                            <option value="">Chọn tỉnh thành</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
-                                            <option value="">Chọn quận huyện</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-lg-3 col-12 p-0">
-                                        <select className="form-control search-slt" id="province" onChange={() => { }}>
-                                            <option value="">Chọn quận huyện</option>
-
-                                        </select>
-                                    </div>
-                                    <div className="col-lg-3 col-12 p-0">
-                                        <button type="button" className="btn bg-gradient btn-danger wrn-btn">Search</button>
-                                    </div>
-                                </div>
+                    <Form onSubmit={search} className="mt-5">
+                        <div className="row align-items-center">
+                            <div className="col-lg-4">
+                                <Form.Group key={maxOccupants} className="mb-3" controlId={maxOccupants}>
+                                    <Form.Control onChange={e => setMaxOccupants(e.target.value)} value={maxOccupants} className="mb-3" placeholder="Số người ở" />
+                                </Form.Group>
                             </div>
+                            <div className="col-lg-4">
+                                <Form.Group key={minPrice} className="mb-3" controlId={minPrice}>
+                                    <Form.Control onChange={e => setminPrice(e.target.value)} value={minPrice} className="mb-3" placeholder="Từ giá" />
+                                </Form.Group>
+                            </div>
+                            <div className="col-lg-4">
+                                <Form.Group key={maxPrice} className="mb-3" controlId={maxPrice}>
+                                    <Form.Control onChange={e => setMaxPrice(e.target.value)} value={maxPrice} className="mb-3" placeholder="Đến giá" />
+                                </Form.Group>
+                            </div>
+
                         </div>
-                    </form>
+                        <div>
+                            <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" >
+                                Search
+                            </Button>
+                        </div>
+                    </Form>
                 </div>
             </section>
             <div className="container py-5 w-75">
                 <div className="row room-items">
-                    {rooms === null ? (
-                        <Spinner animation="border" />
+                    {result === null ? (
+                        rooms === null ? (
+                            <Spinner animation="border" />
+                        ) : (
+                            rooms.map(c => (
+                                <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
+                                    <Card style={{ width: '18rem', height: '15rem' }}>
+                                        <Card.Body>
+                                            <Card.Title>{c.post.title}</Card.Title>
+                                            <Card.Text>
+                                                {c.post.content} <br />
+                                                Số người ở: {c.maxOccupants} <br />
+                                                Giá từ: {c.minPrice} - {c.maxPrice} <br />
+                                                Địa chỉ: {c.address}
+                                            </Card.Text>
+                                            <a href={`/tenantpost/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                            ))
+                        )
                     ) : (
-                        rooms.map(c => (
+                        result.map(c => (
                             <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
                                 <Card style={{ width: '18rem', height: '15rem' }}>
                                     <Card.Body>
-                                        <Card.Title>{c.post.title && c.post.title}</Card.Title>
+                                        <Card.Title>{c.post.title}</Card.Title>
                                         <Card.Text>
-                                            {c.post.content && c.post.content} <br />
-                                            Số người ở: {c.maxOccupants && c.maxOccupants} <br />
-                                            Giá từ: {c.minPrice && c.minPrice} - {c.maxPrice && c.maxPrice} <br />
-                                            Địa chỉ: {c.address && c.address} 
-
+                                            {c.post.content} <br />
+                                            Số người ở: {c.maxOccupants} <br />
+                                            Giá từ: {c.minPrice} - {c.maxPrice} <br />
+                                            Địa chỉ: {c.address}
                                         </Card.Text>
                                         <a href={`/tenantpost/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
                                     </Card.Body>
@@ -114,6 +152,7 @@ const HomeLandlord = () => {
                             </div>
                         ))
                     )}
+
                 </div>
             </div>
         </>

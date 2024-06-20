@@ -22,7 +22,10 @@ export const endpoints = {
     'tenantPostByUserId':(tenantId)=>`/api/tenantposts/${tenantId}/tenant/`,
     'checkFollow':(id)=>`/api/checkfollow/${id}/`,
     'comment':(cmtPostId)=>`/api/posts/${cmtPostId}/comments/`,
-    'listCmt':(cmtId)=>`/api/posts/${cmtId}/getcomments/`
+    'listCmt':(cmtId)=>`/api/posts/${cmtId}/getcomments/`,
+    // 'searchTeantPostByKw':(kw)=>`/api/?maxOccupants=${}&address=${}&minPrice=${}&maxPrice=${}`
+    'searchTeantPostByKw':(kw)=>`${kw}`
+
 }
 
 export const authApi=()=>{
