@@ -91,8 +91,8 @@ const TenantDetailPost = () => {
                             ) : (
                                 listComment.map(c => (
                                     <div key={c.id} style={styles.comment}>
-                                        <p>{c.user.fullName}</p>
-                                        <img className="rounded-circle profile-img" src={c.user.avatar} alt="Profile" style={styles.avatar} />
+                                        <p>{c.postId.user.fullName}</p>
+                                        <img className="rounded-circle profile-img" src={c.postId.user.avatar} alt="Profile" style={styles.avatar} />
                                         <div style={styles.commentContent}>
                                             <p>{c.content}</p>
                                         </div>

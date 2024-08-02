@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Carousel, Card, Spinner, Form, Button } from 'react-bootstrap';
-import APIs, { endpoints } from '../../config/APIs';
-import { getCities, getDistricts, getWards } from '../../config/APIAdress';
+import { Carousel, Card, Spinner, Form, Button, Pagination } from 'react-bootstrap';
+import APIs, { authApi, endpoints } from '../../config/APIs';
 
 
 const HomeLandlord = () => {
@@ -10,30 +9,44 @@ const HomeLandlord = () => {
     const [minPrice, setminPrice] = useState('')
     const [maxPrice, setMaxPrice] = useState('')
     const [result, setResult] = useState(null)
+    const [page, setPage] = useState(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState(1); // Tổng số trang
+
 
 
     const tenantPost = async () => {
         try {
-            let res = await APIs.get(endpoints['tenantPost']);
-            setRooms(res.data)
+            let res = await APIs.get(endpoints['tenantPost'](page));
+            setRooms(res.data.posts)
+            setTotalPages(res.data.totalPages)
         } catch (ex) {
             console.error(ex);
         }
     }
     useEffect(() => {
         tenantPost();
-    }, [])
+    }, [page])
 
-    const kw = `/api/tenantpost/?maxOccupants=${maxOccupants}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    console.log(kw)
+    const handlePageChange = (number) => {
+        setPage(number); // Cập nhật trang hiện tại
+    };
+    let items = [];
+    for (let number = 1; number <= totalPages; number++) {
+        items.push(
+            <Pagination.Item key={number} active={number === page} onClick={() => handlePageChange(number)}>
+                {number}
+            </Pagination.Item>
+        );
+    }
+
+    const kw = `maxOccupants=${maxOccupants}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}`
 
 
-    const search = async () => {
+    const search = async (e) => {
+        e.preventDefault();
         try {
-            const res = await APIs.get(endpoints['searchTeantPostByKw'](kw))
-            console.log('===================')
-            console.log(res.data)
-            setResult(res.data)
+            const res = await authApi().get(endpoints['searchTeantPostByKw'](kw))
+            setResult(res.data.posts)
         } catch (ex) {
             console.error(ex)
         }
@@ -84,42 +97,85 @@ const HomeLandlord = () => {
             </Carousel>
             <section className="search-sec">
                 <div className="container">
-                    <Form onSubmit={search} className="mt-5">
-                        <div className="row align-items-center">
-                            <div className="col-lg-4">
-                                <Form.Group key={maxOccupants} className="mb-3" controlId={maxOccupants}>
-                                    <Form.Control onChange={e => setMaxOccupants(e.target.value)} value={maxOccupants} className="mb-3" placeholder="Số người ở" />
-                                </Form.Group>
-                            </div>
-                            <div className="col-lg-4">
-                                <Form.Group key={minPrice} className="mb-3" controlId={minPrice}>
-                                    <Form.Control onChange={e => setminPrice(e.target.value)} value={minPrice} className="mb-3" placeholder="Từ giá" />
-                                </Form.Group>
-                            </div>
-                            <div className="col-lg-4">
-                                <Form.Group key={maxPrice} className="mb-3" controlId={maxPrice}>
-                                    <Form.Control onChange={e => setMaxPrice(e.target.value)} value={maxPrice} className="mb-3" placeholder="Đến giá" />
-                                </Form.Group>
-                            </div>
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <div className="row">
 
+                                <div className="col-lg-3 col-12 p-0">
+                                    <select className="form-control search-slt" id="province" >
+                                        <option value="">Chọn tỉnh thành</option>
+
+                                    </select>
+                                </div>
+                                <div className="col-lg-3 col-12 p-0">
+                                    <select className="form-control search-slt" id="province">
+                                        <option value="">Chọn quận huyện</option>
+
+                                    </select>
+                                </div>
+                                <div className="col-lg-3 col-12 p-0">
+                                    <select className="form-control search-slt" id="province">
+                                        <option value="">Chọn quận huyện</option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div className="row">
+                                <Form onSubmit={search} className="row mb-3">
+                                    <div className="col-lg-3 col-12 p-0">
+                                        <Form.Group controlId="maxOccupants">
+                                            <Form.Control
+                                                onChange={e => setMaxOccupants(e.target.value)}
+                                                value={maxOccupants}
+                                                placeholder="Số người ở"
+                                                className="form-control search-slt"
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                    <div className="col-lg-3 col-12 p-0">
+                                        <Form.Group controlId="minPrice">
+                                            <Form.Control
+                                                onChange={e => setminPrice(e.target.value)}
+                                                value={minPrice}
+                                                placeholder="Từ giá"
+                                                className="form-control search-slt"
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                    <div className="col-lg-3 col-12 p-0">
+                                        <Form.Group controlId="maxPrice">
+                                            <Form.Control
+                                                onChange={e => setMaxPrice(e.target.value)}
+                                                value={maxPrice}
+                                                placeholder="Đến giá"
+                                                className="form-control search-slt"
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                    <div className="col-lg-3 col-12 p-0">
+                                        <Button type="submit" className="btn bg-gradient btn-danger wrn-btn">Search</Button>
+                                    </div>
+
+                                </Form>
+                            </div>
                         </div>
-                        <div>
-                            <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" >
-                                Search
-                            </Button>
-                        </div>
-                    </Form>
+                    </div>
                 </div>
             </section>
+
             <div className="container py-5 w-75">
                 <div className="row room-items">
+                    <div>
+                        <Pagination size="sm">{items}</Pagination>
+                    </div>
                     {result === null ? (
                         rooms === null ? (
                             <Spinner animation="border" />
                         ) : (
                             rooms.map(c => (
                                 <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
-                                    <Card style={{ width: '18rem', height: '15rem' }}>
+                                    <Card style={{ width: '18rem', height: '18rem' }}>
                                         <Card.Body>
                                             <Card.Title>{c.post.title}</Card.Title>
                                             <Card.Text>
@@ -137,7 +193,7 @@ const HomeLandlord = () => {
                     ) : (
                         result.map(c => (
                             <div key={c.id} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
-                                <Card style={{ width: '18rem', height: '15rem' }}>
+                                <Card style={{ width: '18rem', height: '18rem' }}>
                                     <Card.Body>
                                         <Card.Title>{c.post.title}</Card.Title>
                                         <Card.Text>
@@ -161,3 +217,11 @@ const HomeLandlord = () => {
 };
 
 export default HomeLandlord;
+
+
+
+
+
+
+
+

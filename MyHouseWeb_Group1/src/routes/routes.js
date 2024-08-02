@@ -2,9 +2,7 @@ import React from 'react';
 import Rooms from '../component/rooms';
 import Login from '../component/login';
 import Home from '../component/home';
-import SavedRoom from '../component/savedRoom/savedRoom';
 import Host from '../component/host/host';
-import ForgotPassword from '../component/host/components/password/forgotPassword';
 import NewPostRoom from '../component/Landlord/post';
 import HomeLandlord from '../component/Landlord/home';
 import PostFindRoom from '../component/host/components/post/postFindRoom';
@@ -21,16 +19,7 @@ const routes = [
         exact: false,
         main: ({match, location}) => <Host match={match} location={location}/>
     },
-    {
-        path: '/forgot_pass',
-        exact: false,
-        main: ({location}) => <ForgotPassword location={location}/>
-    },
-    {
-        path: '/saved_room',
-        exact: false,
-        main: ({match, location}) => <SavedRoom match={match} location={location}/>
-    },
+    
     {
         path: '/room',
         exact: false,
@@ -55,11 +44,6 @@ const routes = [
         path: '/logout',
         exact: false,
         main: ({location}) => <Home location={location} />
-    },
-    {
-        path: '/activate-account/:code',
-        exact: false,
-        main: ({location}) => <Login location={location}/>
     },
     {
         path: '/',

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import ImageSlider from "./ImageSlider";
 import { authApi, endpoints } from '../../config/APIs';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { MyUserContext } from '../../config/Contexts';
 const RoomDetail = () => {
     const [room, setRoom] = useState(null);
     const [img, setImg] = useState(null);
@@ -10,6 +11,7 @@ const RoomDetail = () => {
     const [cmt, setCmt] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
     const [listComment, setListComment] = useState(null)
+    const user = useContext(MyUserContext)
 
     const loadPostDetail = async () => {
         try {
@@ -97,7 +99,7 @@ const RoomDetail = () => {
                                                 <span className="bold">Số người ở </span> {room.room.maxOccupants}
                                             </p>
                                         </div>
-                                        <div style={{ ...rightColumnStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        {user.role === 'ROLE_TENANT'?(<div style={{ ...rightColumnStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                             <img className="rounded-circle profile-img" src={room.post.user.avatar} alt="User avatar" />
                                             <p>
                                                 <span className="bold"></span> {room.post.user.fullName}
@@ -106,7 +108,8 @@ const RoomDetail = () => {
                                                 <span className="bold"></span> {room.post.user.landlord.phoneNumber}
                                             </p>
                                             <a href={`/users/${room.post.user.id}/`} className="cs-btn-detail btn btn-default text-white">Xem trang</a>
-                                        </div>
+                                        </div>):(<div></div>)}
+
                                     </div>
                                     <div className="row">
                                         <Form.Group className="mb-3 d-flex align-items-center" controlId="formBasicCheckbox">

@@ -6,13 +6,15 @@ export const API_URL=""
 export const CLOUD_IMG=""
 const BASE_URL = 'http://localhost:8080/WebFindingHousing/';
 export const endpoints = {
-    'landlordPost':'/api/landlordposts/',
+    'getlLandlordPost':'/api/get/landlordposts/',
+    'landlordPost':(page)=>`/api/landlordposts/?page=${page}`,
     'login':'/api/login/',
     'register':'/api/users/',
     'landlord_register':'/api/landlord_create/',
     'current_user':'/api/current-user/',
-    'landlordPostCreate':'/api/landlordpost_create/',
-    'tenantPost':'/api/tenantpost/',
+    'landlordPostCreate':'/api/landlordposts_create/',
+    'tenantPostCreate':'/api/tenantpost_create/',
+    'tenantPost':(pageId)=>`/api/tenantposts/?page=${pageId}`,
     'tenantPostDetail':(detailId)=>`/api/tenantpost/${detailId}/`,
     'landlordPostDetail':(postId)=>`/api/landlordposts/${postId}/`,
     'roomDetail':(roomId)=>`/api/rooms/${roomId}/images/`,
@@ -23,8 +25,8 @@ export const endpoints = {
     'checkFollow':(id)=>`/api/checkfollow/${id}/`,
     'comment':(cmtPostId)=>`/api/posts/${cmtPostId}/comments/`,
     'listCmt':(cmtId)=>`/api/posts/${cmtId}/getcomments/`,
-    // 'searchTeantPostByKw':(kw)=>`/api/?maxOccupants=${}&address=${}&minPrice=${}&maxPrice=${}`
-    'searchTeantPostByKw':(kw)=>`${kw}`
+    'searchTeantPostByKw':(tenantKw)=>`/api/tenantposts/?${tenantKw}`,
+    'searchLandlordPostByKw':(landlordKw)=>`/api/landlordposts/?${landlordKw}`
 
 }
 

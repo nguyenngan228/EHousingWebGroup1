@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './room.css';
-
-
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import Tooltip from '@material-ui/core/Tooltip';
-import CloseIcon from '@material-ui/icons/Close';
-import Alert from '../../../common/alert';
 import { authApi, endpoints } from '../../../../config/APIs';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { Container } from 'react-bootstrap';

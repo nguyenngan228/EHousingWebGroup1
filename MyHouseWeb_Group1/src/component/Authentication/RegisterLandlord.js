@@ -11,7 +11,17 @@ const RegisterLandlord = () => {
     const [alertStatus, setAlertStatus] = useState(false);
     const [alertType, setAlertType] = useState('');
     const history = useHistory();
-    const [user, setUser] = useState({ role: 'landlord' });
+    const [user, setUser] = useState({
+        role: 'landlord',
+        username: "",
+        password: "",
+        email: "",
+        full_name: "",
+        phone_number: "",
+        address: ""
+
+
+    });
     const [cities, setCities] = useState(null);
     const [districts, setDistricts] = useState(null);
     const [wards, setWards] = useState(null);
@@ -23,6 +33,7 @@ const RegisterLandlord = () => {
     const avatar = useRef();
     const imageRow = useRef();
     const imageRoom = useRef();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const fields = [
         { label: "Tên người dùng", type: "text", field: "username" },
@@ -45,10 +56,11 @@ const RegisterLandlord = () => {
         setIsLoading(true)
         let form = new FormData();
         for (let key in user) {
-            if (user[key] === "") {
+            if (!user[key]) {
                 setErrorMessage("Vui lòng nhập đầy đủ thông tin");
                 setAlertStatus(true);
                 setAlertType("error");
+                setIsLoading(false);
                 return;
             }
             else if (key !== 'confirm') {
@@ -57,10 +69,24 @@ const RegisterLandlord = () => {
                 form.append(key, user[key]);
             }
         }
+        if (!emailPattern.test(user['email'])) {
+            setErrorMessage("Email không hợp lệ");
+            setAlertStatus(true);
+            setAlertType("error");
+            setIsLoading(false);
+            return;
+        }
+        if (user['password'] !== user['confirm']) {
+            setErrorMessage("Mật khẩu không trùng khớp");
+            setAlertStatus(true);
+            setAlertType("error");
+            setIsLoading(false)
+            return;
+        }
         if (avatar) {
             form.append('file', avatar.current.files[0]);
         }
-        console.log(avatar)
+
         if (imageRow.current.files.length > 0) {
             Array.from(imageRow.current.files).forEach(file => {
                 form.append('imageRow', file);
@@ -84,9 +110,9 @@ const RegisterLandlord = () => {
                 setAlertType("success");
                 setIsLoading(false)
                 history.push("/login");
-                
+
             } else {
-                setErrorMessage("Đã có lỗi xảy ra");
+                setErrorMessage("Mạng không ổn định");
                 setAlertStatus(true);
                 setAlertType("error");
                 setIsLoading(false)
@@ -98,7 +124,7 @@ const RegisterLandlord = () => {
             setAlertStatus(true);
             setAlertType("error");
             setIsLoading(false)
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
@@ -224,7 +250,7 @@ const RegisterLandlord = () => {
                 </Form.Group>
 
                 <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
-                    {isLoading?<Spinner animation="border" />:"Đăng kí"}
+                    {isLoading ? <Spinner animation="border" /> : "Đăng kí"}
                 </Button>
             </Form>
 

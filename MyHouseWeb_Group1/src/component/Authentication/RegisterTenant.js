@@ -31,11 +31,17 @@ const RegisterTenant = () => {
     {
         label: "Họ và tên",
         type: "text",
-        field: "fullName"
+        field: "full_name"
     }]
 
     const history = useHistory()
-    const [user, setUser] = useState({ role: 'tenant' });
+    const [user, setUser] = useState({
+        role: 'tenant',
+        username: "",
+        password: "",
+        email: "",
+        full_name: "",
+    });
     const avatar = useRef();
 
     const change = (e, field) => {
@@ -43,6 +49,7 @@ const RegisterTenant = () => {
             return { ...current, [field]: e.target.value }
         })
     }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const register = async (e) => {
         e.preventDefault();
@@ -53,29 +60,38 @@ const RegisterTenant = () => {
                 setErrorMessage("Vui lòng nhập đầy đủ thông tin");
                 setAlertStatus(true);
                 setAlertType("error");
-                return;  
-            } 
+                setIsLoading(false)
+                return;
+            }
             else if (key !== 'confirm') {
                 form.append(key, user[key]);
             }
+        }
+        if (!emailPattern.test(user['email'])) {
+            setErrorMessage("Email không hợp lệ");
+            setAlertStatus(true);
+            setAlertType("error");
+            setIsLoading(false);
+            return;
         }
         if (user['password'] !== user['confirm']) {
             setErrorMessage("Mật khẩu không trùng khớp");
             setAlertStatus(true);
             setAlertType("error");
             setIsLoading(false)
-            return;  
+            return;
         }
+        
         if (avatar) {
             form.append('file', avatar.current.files[0]);
-        }
+        } 
         try {
             let res = await APIs.post(endpoints['register'], form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-    
+
             if (res.status === 201) {
                 history.push("/login");
                 setErrorMessage("Đăng kí thành công!");
@@ -94,7 +110,7 @@ const RegisterTenant = () => {
             setAlertStatus(true);
             setAlertType("error");
             setIsLoading(false)
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
@@ -118,7 +134,7 @@ const RegisterTenant = () => {
                     <Form.Control type="file" accept=".png,.jpg,.jpeg" ref={avatar} />
                 </Form.Group>
                 <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
-                    {isLoading?<Spinner animation="border" />:"Đăng kí"}
+                    {isLoading ? <Spinner animation="border" /> : "Đăng kí"}
                 </Button>
             </Form>
 

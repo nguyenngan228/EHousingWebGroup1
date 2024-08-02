@@ -6,8 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import APIs, { authApi, endpoints } from '../config/APIs';
 import cookie from 'react-cookies'
 import { MyDispatchContext } from '../config/Contexts';
-import { FacebookAuthProvider } from 'firebase/auth';
-// import firebase, { auth } from '../firebase/Config';
+import { FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
+import firebase, { auth } from '../firebase/Config';
+import { GoogleAuthProvider } from 'firebase/auth/web-extension';
 const Login = () => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState('');
@@ -17,7 +18,7 @@ const Login = () => {
 
 
 
-    const HideAlert=()=> {
+    const HideAlert = () => {
         setAlertStatus(false)
     }
 
@@ -30,7 +31,10 @@ const Login = () => {
         type: "password",
         field: "password"
     }]
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({
+        username: "",
+        password: ""
+    });
     const dispatch = useContext(MyDispatchContext);
 
 
@@ -42,14 +46,27 @@ const Login = () => {
     }
     const login = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+
+        // Kiểm tra xem tất cả các trường trong 'user' có được điền đầy đủ hay không
+        for (let key in user) {
+            if (!user[key]) {
+                setErrorMessage("Vui lòng nhập đầy đủ thông tin");
+                setAlertStatus(true);
+                setAlertType("error");
+                setIsLoading(false);
+                return;
+            }
+        }
+
         try {
-            let res = await APIs.post(endpoints['login'], { ...user })
-            cookie.save("token", res.data)
+            let res = await APIs.post(endpoints['login'], { ...user });
+            cookie.save("token", res.data);
             let u = await authApi().get(endpoints['current_user']);
-            cookie.save('user', u.data)
+            cookie.save('user', u.data);
             dispatch({
-                "type": "login",
-                "payload": u.data
+                type: "login",
+                payload: u.data
             });
             if (u.data.role === 'ROLE_TENANT')
                 history.push('/');
@@ -59,23 +76,42 @@ const Login = () => {
             setErrorMessage("Tài khoản chưa kích hoạt hoặc không tồn tại");
             setAlertStatus(true);
             setAlertType("error");
-            setIsLoading(false)
-            return;
+            setIsLoading(false);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
+    };
+
+
+
+    const fbProvider = new FacebookAuthProvider();
+    const ggProvider = new GoogleAuthProvider();
+
+    const loginWithFB = async (e) => {
+        e.preventDefault();
+        try {
+            const result = await signInWithPopup(auth, fbProvider);
+            console.log(result);
+
+        } catch (ex) {
+            console.error(ex)
+        }
+
+    }
+    const loginWithGG = async (e) => {
+        e.preventDefault();
+        try {
+            const result = await signInWithPopup(auth, ggProvider);
+            console.log(result);
+        } catch (ex) {
+            console.error(ex)
+        }
+
     }
 
-    // const fbProvider = new FacebookAuthProvider();
-
-
-    // const loginWithFB = async()=>{
-    //     auth.signInWithPopup(fbProvider)
-    // }
-
-    // auth.onAuthStateChanged((user)=>{
-    //     console.log({user});
-    // });
+    auth.onAuthStateChanged((user) => {
+        console.log({ user });
+    });
 
     return (
         <div className="Login">
@@ -101,11 +137,11 @@ const Login = () => {
                 <Button type="submit" onClick={login} className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
                     {isLoading ? <Spinner animation="border" /> : "Đăng nhập"}
                 </Button>
-                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
-                    {isLoading ? <Spinner animation="border" /> : "Đăng nhập với Google"}
+                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" >
+                    "Đăng nhập với Google"
                 </Button>
-                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" disabled={isLoading}>
-                    {isLoading ? <Spinner animation="border" /> : "Đăng nhập với Facebook"}
+                <Button type="submit" className="mt-3 btn btn-default text-white" variant="primary" >
+                    "Đăng nhập với Facebook"
                 </Button>
             </Form>
 

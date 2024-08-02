@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { Route, Link, useHistory } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { MyDispatchContext, MyUserContext } from '../config/Contexts';
+import cookie from 'react-cookies'
+
 
 const Menu = () => {
     const history = useHistory();
@@ -22,7 +24,9 @@ const Menu = () => {
     ];
 
     const handleLogout = () => {
-        dispatch({ type: 'logout' });
+        // cookie.remove('token', { path: '/' });
+        // cookie.remove('user', { path: '/' });
+        dispatch({ type: "logout" });
         history.push('/');
     };
 

@@ -16,11 +16,6 @@ const MyLandlordPost = () => {
         try {
             let res = await authApi().get(endpoints['landlordPostByUserId'](user.id))
             setPost(res.data)
-            console.log(res.data)
-            
-
-            // let resp = await authApi().get(endpoints['roomDetail'](res.data.room.id))
-            // setImg(resp.data)
             
 
         } catch (ex) {
@@ -47,18 +42,14 @@ const MyLandlordPost = () => {
                             <Card style={{ width: '18rem', height: '35rem' }}>
                                 <Card.Img
                                     variant="top"
-                                    src={img && img.length > 0 ? img[0].url : 'https://res.cloudinary.com/dc5gyjv8c/image/upload/v1718816929/no-img_hzegvu.png'}
+                                    src={c.room.imageSet[0].image}
                                 />
-
-                                {/* {img==null?('https://res.cloudinary.com/dc5gyjv8c/image/upload/v1718816929/no-img_hzegvu.png'):(img.map(i=>(<Card.Img key={i.id} variant="top" src={c.images ? c.images[0] />))
-                                } */}
-
                                 <Card.Body>
-                                    <Card.Title>{c.post.title && c.post.title}</Card.Title>
+                                    <Card.Title>{c.post.title}</Card.Title>
                                     <Card.Text>
-                                        {c.post.content && c.post.content} <br />
+                                        {c.post.content} <br />
                                         Giá: <span className="fw-bold"><NumberFormat value={c.room.price} displayType={'text'} thousandSeparator={true} /> (VND)</span> <br />
-                                        {c.room.address && c.room.address}
+                                        {c.room.address}
                                     </Card.Text>
                                     <a href={`/landlordposts/${c.post.id}/`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
                                 </Card.Body>

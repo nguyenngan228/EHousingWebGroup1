@@ -6,8 +6,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import Profile from './components/profile/profile';
-// import Payment from './components/payment/payment';
-// import ChangePassword from './components/password/changePassword';
 import './host.css';
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
